@@ -14,9 +14,16 @@ export class PlaceService {
   ) {}
 
   async create(createPlaceDto: CreatePlaceDto) {
-    return await this.placeModel.create<CreatePlaceDto>({
-      ...createPlaceDto,
-    });
+    return await this.placeModel.create<CreatePlaceDto>(createPlaceDto);
+  }
+
+  async search({ search, limit }) {
+    const regex = new RegExp(search, 'i');
+    return this.placeModel
+      .find({
+        $or: [{ title: regex }, { description: regex }, { address: regex }],
+      })
+      .limit(limit);
   }
 
   uploadFiles(photos: Array<Express.Multer.File>) {
@@ -35,8 +42,8 @@ export class PlaceService {
     return this.placeModel.findById(id);
   }
 
-  async update(id: string, updatePlaceDto: UpdatePlaceDto, userId: ObjectId) {
-    if (userId === updatePlaceDto.owner) {
+  async update(id: string, updatePlaceDto: UpdatePlaceDto) {
+    if (updatePlaceDto.owner) {
       return this.placeModel.findByIdAndUpdate(id, updatePlaceDto, {
         new: true,
         useFindAndModify: false,
