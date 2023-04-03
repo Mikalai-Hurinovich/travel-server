@@ -3,7 +3,7 @@ import { BookingDto } from './dto/booking.dto';
 import { Model, ObjectId } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Booking, BookingDocument } from './schemas/booking.schema';
-import { CreateBookingDto } from '../place/schemas/create-booking.dto';
+import { CreateBookingDto } from './dto/create-booking.dto';
 
 @Injectable()
 export class BookingService {
@@ -11,10 +11,9 @@ export class BookingService {
     @InjectModel(Booking.name) private bookingModel: Model<BookingDocument>,
   ) {}
 
-  async bookPlace(bookingPlaceDto: BookingDto, userId: ObjectId) {
+  async bookPlace(bookingPlaceDto: BookingDto) {
     return this.bookingModel.create<CreateBookingDto>({
       ...bookingPlaceDto,
-      userId,
     });
   }
 
@@ -22,7 +21,7 @@ export class BookingService {
     return this.bookingModel.findById(id).populate('place');
   }
 
-  async findAllUserBookings(userId: ObjectId) {
+  async findAllUserBookings(userId: string) {
     return this.bookingModel.find({ userId }).populate('place');
   }
 

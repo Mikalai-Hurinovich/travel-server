@@ -1,12 +1,46 @@
 import { ObjectId } from 'mongoose';
+import { IPlace } from '../../models/place.interface';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsPhoneNumber,
+  IsString,
+} from 'class-validator';
 
-export interface BookingDto {
-  placeId: ObjectId;
-  checkIn: string;
-  checkOut: string;
-  guests: string;
-  name: string;
-  price: number;
-  email: string;
-  phone: string;
+export class BookingDto {
+  @IsNotEmpty()
+  readonly place: IPlace;
+
+  @IsNotEmpty()
+  @IsString()
+  readonly checkIn: string;
+
+  @IsNotEmpty()
+  @IsString()
+  readonly checkOut: string;
+
+  @IsNotEmpty()
+  @IsString()
+  readonly guests: string;
+
+  @IsNotEmpty()
+  @IsString()
+  readonly name: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  readonly price: number;
+
+  @IsNotEmpty()
+  @IsEmail()
+  readonly email: string;
+
+  @IsNotEmpty()
+  @IsPhoneNumber()
+  readonly phone: string;
+
+  @IsNotEmpty()
+  @IsString()
+  readonly userId: ObjectId;
 }

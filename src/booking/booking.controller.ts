@@ -6,10 +6,12 @@ import {
   Headers,
   Param,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { BookingDto } from './dto/booking.dto';
 import { BookingService } from './booking.service';
 import { ObjectId } from 'mongoose';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller()
 export class BookingController {
@@ -20,8 +22,9 @@ export class BookingController {
     return this.bookingService.findOne(id);
   }
 
-  @Get('/user-bookings')
-  findAllUserBookings(@Headers('id') id: ObjectId) {
+  @UseGuards(AuthGuard())
+  @Get('/user-bookings/:id')
+  findAllUserBookings(@Param('id') id: string) {
     return this.bookingService.findAllUserBookings(id);
   }
 
@@ -30,27 +33,29 @@ export class BookingController {
     return this.bookingService.findAllPlaceBookings(placeId);
   }
 
-  @Get('/bookings')
+  @UseGuards(AuthGuard())
+  @Get('/bookings/:id')
   findAllBookings() {
     return this.bookingService.findAllBookings();
   }
 
   @Post('/bookings')
-  bookPlace(@Body() bookingDto: BookingDto, @Headers('id') userId: ObjectId) {
-    return this.bookingService.bookPlace(bookingDto, userId);
+  bookPlace(@Body() bookingDto: BookingDto) {
+    return this.bookingService.bookPlace(bookingDto);
   }
 
   @Delete('/bookings/:id')
-  deleteOne(@Param('id') id: string, @Headers('id') userId: ObjectId) {
+  async deleteOne(@Param('id') id: string, @Headers('id') userId: ObjectId) {
     if (id === 'all') {
       return this.removeAll(userId);
     }
-    return this.bookingService.deleteOne(id);
+    await this.bookingService.deleteOne(id);
+    return { message: 'Booking has been deleted.' };
   }
 
   @Delete('/bookings/all')
-  async removeAll(@Headers('id') userId: ObjectId) {
+  async removeAll(userId: ObjectId) {
     await this.bookingService.removeAll(userId);
-    return { message: 'All places have been deleted.' };
+    return { message: 'All bookings have been deleted.' };
   }
 }

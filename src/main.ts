@@ -7,7 +7,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
     allowedHeaders: '*',
-    origin: '*',
+    origin: ['*', 'http://localhost:3000'],
   });
   await app.listen(5000, () => {
     console.log('PORT 5000');
