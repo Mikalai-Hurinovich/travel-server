@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongoose';
 import { IPhoto } from '../photo.interface';
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreatePlaceDto {
   @IsNotEmpty()
@@ -36,7 +36,7 @@ export class CreatePlaceDto {
   features: string[];
 
   @IsNotEmpty()
-  @IsString()
+  @IsNumber()
   price: number;
 
   @IsNotEmpty()
