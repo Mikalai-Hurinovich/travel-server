@@ -1,6 +1,6 @@
+export const B2 = require('backblaze-b2');
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as uuid from 'uuid';
-import * as B2 from 'backblaze-b2';
 
 export enum FileType {
   PHOTOS = 'photos',
