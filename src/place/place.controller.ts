@@ -7,7 +7,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -47,9 +46,11 @@ export class PlaceController {
     return this.placeService.findAllUserPlaces(userId);
   }
 
-  @Get('search')
-  search(@Query() query: { search: string; limit: number }) {
-    return this.placeService.search(query);
+  @Post('search')
+  search(
+    @Body() search: { search: string; limit: number; features: string[] },
+  ) {
+    return this.placeService.search(search);
   }
 
   @Get(':id')
