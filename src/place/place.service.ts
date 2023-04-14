@@ -17,13 +17,15 @@ export class PlaceService {
     return await this.placeModel.create<CreatePlaceDto>(createPlaceDto);
   }
 
-  async search({ search, limit }) {
+  async search({ search, limit, features }) {
     const regex = new RegExp(search, 'i');
-    return this.placeModel
-      .find({
-        $or: [{ title: regex }, { description: regex }, { address: regex }],
-      })
-      .limit(limit);
+    const query = {
+      $or: [{ title: regex }, { address: regex }],
+    };
+    if (features.length > 0) {
+      query['features'] = { $all: features };
+    }
+    return this.placeModel.find(query).limit(limit);
   }
 
   uploadFiles(photos: Array<Express.Multer.File>) {
